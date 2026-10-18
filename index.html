@@ -40,7 +40,14 @@
   .me { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: block; }
   .dot { position: absolute; top: -1px; right: -1px; width: 10px; height: 10px; background: #1d9bf0; border: 2px solid #fff; border-radius: 50%; }
   .rel { position: relative; }
-  .post { display: flex; gap: 12px; padding: 12px 16px 4px; }
+  .top button svg { width: 26px; height: 26px; }
+  .post { display: flex; gap: 10px; padding: 10px 16px 0; }
+  .text p { margin: 12px 0 0; font-size: 15px; line-height: 20px; white-space: pre-wrap; }
+  .text p:first-child { margin-top: 2px; }
+  a.inline { color: #1d9bf0; text-decoration: none; }
+  .media { display: block; width: 100%; margin-top: 12px; border-radius: 16px; border: 1px solid #cfd9de; object-fit: cover; max-height: 280px; }
+  .tools button { width: 28px; height: 28px; color: #536471; }
+  .tools svg { width: 18px; height: 18px; }
   .post + .post, .replyrow + .post { border-top: 1px solid #eff3f4; }
   .col { width: 40px; flex: none; display: flex; flex-direction: column; align-items: center; }
   .av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #cfd9de; }
@@ -54,14 +61,12 @@
   .name { font-weight: 700; white-space: nowrap; flex: none; }
   .handle { color: #536471; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .badge { width: 16px; height: 16px; flex: none; }
-  .tools { margin-left: auto; display: flex; color: #536471; flex: none; }
-  .tools button { width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center; }
-  .text p { margin: 12px 0 0; font-size: 15px; line-height: 20px; }
-  .text p:first-child { margin-top: 2px; }
+  .tools { margin-left: auto; display: flex; color: #536471; flex: none; align-items: center; }
+  .tools button { width: 28px; height: 28px; border-radius: 999px; display: grid; place-items: center; }
   .more { color: #1d9bf0; }
-  .quote { display: block; width: 100%; text-align: left; margin: 12px 0 2px; border: 1px solid #cfd9de; border-radius: 16px; padding: 12px; background: #fff; cursor: pointer; }
+  .quote { display: block; width: 100%; text-align: left; margin: 12px 0 4px; border: 1px solid #cfd9de; border-radius: 16px; padding: 12px; background: #fff; cursor: pointer; }
   .quote .who { display: flex; align-items: center; gap: 4px; min-width: 0; }
-  .quote p { margin: 4px 0 0; color: #0f1419; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; line-height: 20px; }
+  .quote p { margin: 4px 0 0; color: #0f1419; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; line-height: 20px; }
   .quote.open p { display: block; -webkit-line-clamp: unset; overflow: visible; }
   .acts { display: flex; align-items: center; justify-content: space-between; color: #536471; max-width: 100%; margin: 4px -4px 0; }
   .acts button { display: inline-flex; align-items: center; gap: 4px; min-width: 36px; height: 32px; padding: 0 2px; color: inherit; font-size: 13px; }
@@ -164,26 +169,41 @@ function recordFrom(row) {
     likes: Number(row.likes || 0), replies: Number(row.replies || 0), reposts: Number(row.reposts || 0),
     views: row.views || "", quote: row.quote || null, reply: row.reply || null,
     comments: Array.isArray(row.comments) ? row.comments : [],
+    image: row.image || row.media || "",
     verified: row.verified === true || row.verified === "true"
   };
+}
+function relTime(date, given) {
+  if (given && !/月|技巧|方法|观察|位置|tip|post/.test(given)) return given;
+  if (!date) return "";
+  const then = new Date(date + "T00:00:00").getTime();
+  if (Number.isNaN(then)) return given || "";
+  const hours = Math.max(0, Math.round((Date.now() - then) / 36e5));
+  if (hours < 1) return "刚刚";
+  if (hours < 24) return hours + "小时";
+  const days = Math.round(hours / 24);
+  if (days < 7) return days + "天";
+  const dt = new Date(then);
+  return (dt.getMonth() + 1) + "月" + dt.getDate() + "日";
 }
 function toPost(row) {
   const r = recordFrom(row);
   const avatar = r.avatar || knownAvatar[r.handle] || "";
   people[r.id] = { name: r.author, handle: r.handle, avatar, initial: (r.author || "外").slice(0, 1), verified: r.verified };
   const parts = [];
-  if (r.title) parts.push(r.title);
-  String(r.content).split(/\n\n/).forEach((p) => { if (p.trim()) parts.push(p.trim()); });
-  if (r.notes) parts.push(r.notes);
-  const typeName = { tip: "技巧", location: "位置", position: "位置", method: "方法", methodology: "方法", observation: "观察", post: "" }[r.type] || "";
-  const dateLabel = r.date ? r.date.slice(5).replace("-", "月") + "日" : "";
+  if (r.title && !String(r.content).includes(r.title)) parts.push(r.title);
+  String(r.content).split(/\n\n/).forEach((p) => {
+    const t = p.trim();
+    if (!t || t === r.link) return;
+    parts.push(t);
+  });
+  if (r.notes && /[\u4e00-\u9fff]/.test(r.notes)) parts.push(r.notes);
   return {
-    id: r.id, user: r.id,
-    time: r.time || [dateLabel, typeName].filter(Boolean).join(" · "),
+    id: r.id, user: r.id, time: relTime(r.date, r.time),
     parts: parts.length ? parts : ["（这条记录是空的）"],
-    preview: r.preview || 0,
+    preview: r.preview || (parts.length > 4 ? 4 : 0),
     replies: r.replies, reposts: r.reposts, likes: r.likes, views: r.views,
-    feed: "both", link: r.link, quote: r.quote, reply: r.reply, comments: r.comments
+    feed: "both", link: r.link, quote: r.quote, reply: r.reply, comments: r.comments, image: r.image
   };
 }
 const featured = {
@@ -234,7 +254,7 @@ async function loadFeed() {
   } else synced = "GitHub 暂时读不到，先显示页面里的记录";
   render();
 }
-const state = { tab: "forYou", view: "home", open: {}, openQuote: {}, flags: {}, toast: "", compose: false, draft: "" };
+const state = { tab: "forYou", view: "home", open: {}, openQuote: {}, thread: {}, flags: {}, toast: "", compose: false, draft: "" };
 const ico = {
   x: '<svg class="logo" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
   home: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.15 12.52 1.16a1.3 1.3 0 0 0-1.04 0L2.4 7.15c-.25.17-.4.45-.4.75V21.1c0 .5.42.9.93.9H9.14c.51 0 .93-.4.93-.9v-7.08h3.9V21.1c0 .5.42.9.93.9h6.17c.51 0 .93-.4.93-.9V7.9c0-.3-.16-.58-.4-.75z"/></svg>',
@@ -248,7 +268,8 @@ const ico = {
   views: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.25 0v-7h2v7h-2z"/></svg>',
   bookmark: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4.5C4 3.12 5.12 2 6.5 2h11C18.88 2 20 3.12 20 4.5V22l-8-4.5L4 22V4.5zm2.5-.5a.5.5 0 0 0-.5.5V19l6-3.38L18 19V4.5a.5.5 0 0 0-.5-.5h-11z"/></svg>',
   share: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.59 17.7 8.3l-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.4-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"/></svg>',
-  more: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm7 0a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm7 0a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/></svg>',
+  more: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 7.2a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zm0 6.5a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zm0 6.5a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4z"/></svg>',
+  hide: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 3l18 18"/><path d="M10.5 10.7a2 2 0 0 0 2.8 2.8"/><path d="M6.2 6.3C4.4 7.6 3 9.5 2.2 12c1.5 4 5.2 6.8 9.8 6.8 1.5 0 2.9-.3 4.2-.8M9.8 5.3A10 10 0 0 1 12 5c4.6 0 8.3 2.8 9.8 7a11 11 0 0 1-2.1 3.3"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7z"/></svg>',
   userplus: '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M15.2 4.8a3.6 3.6 0 1 1-7.2 0 3.6 3.6 0 0 1 7.2 0zM4.6 19.4c.4-3.4 3.2-5.6 7-5.6s6.6 2.2 7 5.6c.1.6-.4 1.1-1 1.1H5.6c-.6 0-1.1-.5-1-1.1zM19 8h-2v2h-2v2h2v2h2v-2h2v-2h-2V8z"/></svg>',
   chev: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3.5 8.3 12 16.8l8.5-8.5-1.4-1.4L12 14 4.9 6.9 3.5 8.3z"/></svg>',
@@ -270,6 +291,21 @@ function nameRow(p, time) {
 }
 function find(id) { return posts.find((p) => p.id === id); }
 function flag(id) { return state.flags[id] || { liked: false, reposted: false, bookmarked: false }; }
+function rich(text) {
+  const re = /(https?:\/\/[^\s]+)/g;
+  let out = "", last = 0, m;
+  while ((m = re.exec(text))) {
+    out += esc(text.slice(last, m.index));
+    let url = m[1];
+    const tail = url.match(/[),。，]+$/);
+    if (tail) url = url.slice(0, -tail[0].length);
+    const shown = url.replace(/^https?:\/\//, "");
+    const short = shown.length > 32 ? shown.slice(0, 28) + "…" : shown;
+    out += `<a class="inline" href="${esc(url)}" target="_blank" rel="noopener">${esc(short)}</a>`;
+    last = m.index + url.length;
+  }
+  return out + esc(text.slice(last));
+}
 function toast(text) { state.toast = text; render(); setTimeout(() => { state.toast = ""; render(); }, 1400); }
 function postHtml(post) {
   const p = person(post.user);
@@ -279,28 +315,29 @@ function postHtml(post) {
   const quote = post.quote && post.quote.text ? post.quote : (post.quote ? find(post.quote) : null);
   const likes = post.likes + (f.liked ? 1 : 0);
   const reposts = post.reposts + (f.reposted ? 1 : 0);
-  const body = parts.map((t, i) => `<p>${esc(t)}${post.preview && !open && i === parts.length - 1 ? ` <span class="more" data-more="${esc(post.id)}">显示更多</span>` : ""}</p>`).join("");
+  const body = parts.map((t, i) => `<p>${rich(t)}${post.preview && !open && i === parts.length - 1 ? ` <span class="more" data-more="${esc(post.id)}">显示更多</span>` : ""}</p>`).join("");
   const qp = quote && quote.text ? { name: quote.author, handle: quote.handle, avatar: quote.avatar || knownAvatar[quote.handle] || "", verified: !!quote.verified, initial: (quote.author || "引").slice(0, 1) } : (quote ? person(quote.user) : null);
   const qtext = quote && quote.text ? quote.text : (quote ? quote.parts[0] : "");
   const qtime = quote ? (quote.time || "") : "";
   const qOpen = !!state.openQuote[post.id];
-  const q = qp ? `<div class="quote${qOpen ? " open" : ""}" data-qmore="${esc(post.id)}"><span class="who">${avatar(qp, "sm")}<span class="name">${esc(qp.name)}</span>${badges(qp)}<span class="handle">@${esc(qp.handle)}${qtime ? " · " + esc(qtime) : ""}</span></span><p>${esc(qtext)}${!qOpen && qtext.length > 70 ? ` <span class="more">显示更多</span>` : ""}</p></div>` : "";
+  const q = qp ? `<div class="quote${qOpen ? " open" : ""}" data-qmore="${esc(post.id)}"><span class="who">${avatar(qp, "sm")}<span class="name">${esc(qp.name)}</span>${badges(qp)}<span class="handle">@${esc(qp.handle)}${qtime ? " · " + esc(qtime) : ""}</span></span><p>${esc(qtext)}</p></div>` : "";
   const reply = post.reply && post.reply.author ? post.reply : null;
   const comments = post.comments && post.comments.length ? post.comments : (reply ? [reply] : []);
   const commentHtml = comments.map((c) => `<div class="replyrow"><span class="slot">${avatar({ avatar: c.avatar || knownAvatar[c.handle] || "", initial: (c.author || "回").slice(0, 1) }, "md")}</span><span class="body"><b>${esc(c.author || "")}</b> <span class="who">@${esc(c.handle || "")}</span><br>${esc(c.text || "")}</span></div>`).join("");
   return `<article class="post" data-id="${post.id}">
-    <div class="col">${avatar(p, "")}${comments.length ? `<span class="line"></span>` : ""}</div>
+    <div class="col">${avatar(p, "")}${state.thread[post.id] && comments.length ? `<span class="line"></span>` : ""}</div>
     <div class="main">
       <div class="row">${nameRow(p, post.time)}
         <span class="tools">
-          <button data-copy="${post.id}" aria-label="分享">${ico.share}</button>
-          <button data-toast="已关注 @${p.handle}" aria-label="更多">${ico.more}</button>
+          <button data-toast="这条先留在时间线上" aria-label="隐藏">${ico.hide}</button>
+          <button data-toast="更多" aria-label="更多">${ico.more}</button>
         </span>
       </div>
       <div class="text">${body}</div>
       ${q}
+      ${post.image ? `<img class="media" src="${esc(post.image)}" alt="">` : ""}
       <div class="acts">
-        <button data-reply="${post.id}" aria-label="回复">${ico.reply}<span>${comments.length || post.replies || ""}</span></button>
+        <button data-thread="${post.id}" aria-label="回复">${ico.reply}<span>${comments.length || post.replies || ""}</span></button>
         <button data-flag="reposted" data-id="${post.id}" class="${f.reposted ? "on-repost" : ""}" aria-label="转发">${ico.repost}<span>${reposts || ""}</span></button>
         <button data-flag="liked" data-id="${post.id}" class="${f.liked ? "on-like" : ""}" aria-label="喜欢">${ico.heart}<span>${likes}</span></button>
         <button data-toast="${post.views} 次查看" aria-label="查看">${ico.views}<span>${post.views}</span></button>
@@ -310,7 +347,7 @@ function postHtml(post) {
         </span>
       </div>
     </div>
-  </article>${commentHtml}`;
+  </article>${state.thread[post.id] ? commentHtml : ""}`;
 }
 function feed() {
   return posts.filter((p) => state.tab === "forYou" ? p.feed !== "following" : p.feed !== "forYou").map(postHtml).join("");
@@ -365,12 +402,13 @@ function render() {
 }
 document.body.addEventListener("click", (event) => {
   if (event.target.closest("a")) return;
-  const t = event.target.closest("[data-tab],[data-view],[data-more],[data-qmore],[data-flag],[data-copy],[data-toast],[data-compose],[data-close],[data-reply],#send,[data-open]");
+  const t = event.target.closest("[data-tab],[data-view],[data-more],[data-qmore],[data-thread],[data-flag],[data-copy],[data-toast],[data-compose],[data-close],[data-reply],#send,[data-open]");
   if (!t) return;
   if (t.dataset.tab) { state.tab = t.dataset.tab; state.view = "home"; }
   if (t.dataset.view) state.view = t.dataset.view;
   if (t.dataset.more) state.open[t.dataset.more] = true;
   if (t.dataset.qmore) state.openQuote[t.dataset.qmore] = !state.openQuote[t.dataset.qmore];
+  if (t.dataset.thread) state.thread[t.dataset.thread] = !state.thread[t.dataset.thread];
   if (t.dataset.flag) {
     const id = t.dataset.id;
     const key = t.dataset.flag;
