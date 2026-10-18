@@ -232,7 +232,10 @@ function merge(rows) {
 async function loadFeed() {
   const found = [];
   const urls = [
+    ["json", "/data/feed.json"],
+    ["json", "https://cdn.jsdelivr.net/gh/PlayGuideLab/xlink777@main/data/feed.json"],
     ["json", "https://raw.githubusercontent.com/PlayGuideLab/xlink777/main/data/feed.json"],
+    ["csv", "/data/outbound_links.csv"],
     ["csv", "https://raw.githubusercontent.com/PlayGuideLab/xlink777/main/data/outbound_links.csv"],
     ["csv", "https://raw.githubusercontent.com/PlayGuideLab/xlink777/main/outbound_links_stats.csv"]
   ];
