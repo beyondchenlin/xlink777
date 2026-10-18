@@ -351,8 +351,7 @@ function render() {
   }
   if (state.toast) html += `<div class="toast">${state.toast}</div>`;
   app.innerHTML = html;
-  document.getElementById("dock").innerHTML = `<button class="fab" data-compose aria-label="发帖">${ico.plus}</button>
-    <nav class="nav">
+  document.getElementById("dock").innerHTML = `<nav class="nav">
       ${[["home","主页",ico.home],["search","搜索",ico.search],["grok","Grok",ico.grok],["notifications","通知",ico.bell],["messages","私信",ico.mail]].map(([id,label,icon]) => `<button data-view="${id}" aria-label="${label}">${icon}</button>`).join("")}
     </nav>`;
   const draft = document.getElementById("draft");
