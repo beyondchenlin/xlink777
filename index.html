@@ -59,9 +59,11 @@
   .text p { margin: 12px 0 0; font-size: 15px; line-height: 20px; }
   .text p:first-child { margin-top: 2px; }
   .more { color: #1d9bf0; }
-  .quote { display: block; width: 100%; text-align: left; margin: 12px 0 2px; border: 1px solid #cfd9de; border-radius: 16px; padding: 12px; background: #fff; }
+  .quote { display: block; width: 100%; text-align: left; margin: 12px 0 2px; border: 1px solid #cfd9de; border-radius: 16px; padding: 12px; background: #fff; cursor: pointer; }
   .quote .who { display: flex; align-items: center; gap: 4px; min-width: 0; }
   .quote p { margin: 4px 0 0; color: #0f1419; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; line-height: 20px; }
+  .quote.open p { display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .xlink { display: inline-flex; margin-top: 8px; color: #1d9bf0; font-weight: 700; font-size: 14px; text-decoration: none; }
   .acts { display: flex; align-items: center; justify-content: space-between; color: #536471; max-width: 100%; margin: 4px -4px 0; }
   .acts button { display: inline-flex; align-items: center; gap: 4px; min-width: 36px; height: 32px; padding: 0 2px; color: inherit; font-size: 13px; }
   .acts svg { width: 18px; height: 18px; }
@@ -190,7 +192,7 @@ const featured = {
   author: "范师傅", handle: "FanShifu", avatar: "avatars/fan.jpg",
   link: "https://x.com/FanShifu/status/2111360655467127171",
   notes: "", verified: true, preview: 3, replies: 1, reposts: 1, likes: 14, views: "2.1K",
-  quote: { author: "爱出海", handle: "ai_chuhai", avatar: "avatars/hai.jpg", verified: true, time: "1天", text: "我教别人AI发外链是：做一个日更的Github仓库，about那以及内容里带上你的网站锚文本；各种预印本的地方去出论文，外链与IP一起做；亚马逊以及D4D去出书。这年头以前不会写工具，用AI现在开始学会SPAM了，觉得是条路子，不觉得方法很LOW吗？" },
+  quote: { author: "爱出海", handle: "ai_chuhai", avatar: "avatars/hai.jpg", verified: true, time: "1天", link: "https://x.com/ai_chuhai/status/2111341094625554623", text: "我教别人AI发外链是：做一个日更的Github仓库，about那以及内容里带上你的网站锚文本；各种预印本的地方去出论文，外链与IP一起做；亚马逊以及D4D去出书。这年头以前不会写工具，用AI现在开始学会SPAM了，觉得是条路子，不觉得方法很LOW吗？" },
   reply: { author: "晚晚", handle: "An_yhl", avatar: "avatars/wan.jpg", text: "仓库更新好办，别最后全是 bot 在改 README 就行。" }
 };
 const seed = [{"id":"2026-10-18-self-reply","date":"2026-10-18","type":"tip","title":"链接放在第一条自我回复","content":"主帖不放链接，链接放在第一条自我回复中，避免减少触达。\n\n主帖保持独立价值，评论里再放链接。","author":"earnthread","handle":"earnthread","link":"https://x.com/earnthread/status/2111805522102169931","notes":"最常见建议。来源还提到 big_sensei、AlexFinn。","verified":false},{"id":"2026-10-18-bio","date":"2026-10-18","type":"location","title":"个人资料 Bio / Website","content":"长期链接放在个人资料的 Bio 或 Website 字段，也可以用 Link-in-bio。\n\n这个位置不挂在单条帖子上，是目前比较稳的放法。","author":"Buffer","handle":"buffer","link":"https://s.ee/blog/get-more-website-traffic-from-x/","notes":"安全位置，不附加于单个帖子。","verified":false},{"id":"2026-10-18-native","date":"2026-10-18","type":"tip","title":"先发原生内容，链接当补充","content":"优先文本、图片、视频和线程。链接只作补充。\n\nPremium 账号发带链接的帖子表现更好；非 Premium 的链接帖参与可能接近于零。","author":"Buffer","handle":"buffer","link":"https://buffer.com/resources/links-on-x/","notes":"Buffer 2025 分析。","verified":false},{"id":"2026-10-18-link-below","date":"2026-10-18","type":"method","title":"第一回复写 link below","content":"把链接放在第一条回复，并写上 link below，或直接把链接贴在那里。\n\n这样是把人推进评论区，而不是在主帖里硬塞链接。","author":"big_sensei","handle":"big_sensei","link":"https://x.com/big_sensei/status/1996128574382727591","notes":"同样的做法也出现在 AlexFinn 的帖子里。","verified":false},{"id":"2026-10-18-penalty","date":"2026-10-18","type":"observation","title":"链接惩罚可能已经减轻","content":"2026 年中后期的数据里，链接惩罚可能已经减少或取消。Elon 说过超过一年没有罚；OpenTweet 的数据里，带链接的帖子并不更差。\n\n仍然建议自己测，并优先用回复放链接。","author":"OpenTweet","handle":"opentweet","link":"https://opentweet.io/answers/does-x-penalize-links-2026","notes":"观察，不是保证。","verified":false},{"id":"2026-10-18-dr","date":"2026-10-18","type":"tip","title":"自己做高权重资产","content":"自己建 GitHub 仓库、Chrome 扩展、NPM 包，再从这些地方链回站点。\n\n这是在做自己的高权重资产，不是去借别人的评论区。","author":"AINoSleep","handle":"AINoSleep","link":"https://x.com/AINoSleep/status/2111712252768469009","notes":"Own high DR properties","verified":true},{"id":"2026-10-18-geo","date":"2026-10-18","type":"method","title":"GEO：让 AI 引用你","content":"用用户会问的方式写内容，让 AI 回答时引用你的页面。\n\n外链和被 AI 引用可以一起做。","author":"Wolong","handle":"wolong8848","link":"https://x.com/wolong8848/status/2111723648017113491","notes":"AI recommendation traffic","verified":false}];
@@ -232,7 +234,7 @@ async function loadFeed() {
   } else synced = "GitHub 暂时读不到，先显示页面里的记录";
   render();
 }
-const state = { tab: "forYou", view: "home", open: {}, flags: {}, toast: "", compose: false, draft: "" };
+const state = { tab: "forYou", view: "home", open: {}, openQuote: {}, flags: {}, toast: "", compose: false, draft: "" };
 const ico = {
   x: '<svg class="logo" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
   home: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.15 12.52 1.16a1.3 1.3 0 0 0-1.04 0L2.4 7.15c-.25.17-.4.45-.4.75V21.1c0 .5.42.9.93.9H9.14c.51 0 .93-.4.93-.9v-7.08h3.9V21.1c0 .5.42.9.93.9h6.17c.51 0 .93-.4.93-.9V7.9c0-.3-.16-.58-.4-.75z"/></svg>',
@@ -281,7 +283,9 @@ function postHtml(post) {
   const qp = quote && quote.text ? { name: quote.author, handle: quote.handle, avatar: quote.avatar || knownAvatar[quote.handle] || "", verified: !!quote.verified, initial: (quote.author || "引").slice(0, 1) } : (quote ? person(quote.user) : null);
   const qtext = quote && quote.text ? quote.text : (quote ? quote.parts[0] : "");
   const qtime = quote ? (quote.time || "") : "";
-  const q = qp ? `<div class="quote"><span class="who">${avatar(qp, "sm")}<span class="name">${esc(qp.name)}</span>${badges(qp)}<span class="handle">@${esc(qp.handle)}${qtime ? " · " + esc(qtime) : ""}</span></span><p>${esc(qtext)}</p></div>` : "";
+  const qOpen = !!state.openQuote[post.id];
+  const qlink = quote && quote.link ? quote.link : "";
+  const q = qp ? `<div class="quote${qOpen ? " open" : ""}" data-qmore="${esc(post.id)}"><span class="who">${avatar(qp, "sm")}<span class="name">${esc(qp.name)}</span>${badges(qp)}<span class="handle">@${esc(qp.handle)}${qtime ? " · " + esc(qtime) : ""}</span></span><p>${esc(qtext)}${!qOpen && qtext.length > 70 ? ` <span class="more">显示更多</span>` : ""}</p>${qlink ? `<a class="xlink" href="${esc(qlink)}" target="_blank" rel="noopener">在 X 查看</a>` : ""}</div>` : "";
   const reply = post.reply && post.reply.author ? post.reply : null;
   const comments = post.comments && post.comments.length ? post.comments : (reply ? [reply] : []);
   const commentHtml = comments.map((c) => `<div class="replyrow"><span class="slot">${avatar({ avatar: c.avatar || knownAvatar[c.handle] || "", initial: (c.author || "回").slice(0, 1) }, "md")}</span><span class="body"><b>${esc(c.author || "")}</b> <span class="who">@${esc(c.handle || "")}</span><br>${esc(c.text || "")}</span></div>`).join("");
@@ -306,6 +310,7 @@ function postHtml(post) {
           <button data-copy="${post.id}" aria-label="分享">${ico.share}</button>
         </span>
       </div>
+      ${post.link ? `<a class="xlink" href="${esc(post.link)}" target="_blank" rel="noopener">在 X 查看原帖</a>` : ""}
     </div>
   </article>${commentHtml}`;
 }
@@ -361,11 +366,13 @@ function render() {
   }
 }
 document.body.addEventListener("click", (event) => {
-  const t = event.target.closest("[data-tab],[data-view],[data-more],[data-flag],[data-copy],[data-toast],[data-compose],[data-close],[data-reply],#send,[data-open]");
+  if (event.target.closest("a")) return;
+  const t = event.target.closest("[data-tab],[data-view],[data-more],[data-qmore],[data-flag],[data-copy],[data-toast],[data-compose],[data-close],[data-reply],#send,[data-open]");
   if (!t) return;
   if (t.dataset.tab) { state.tab = t.dataset.tab; state.view = "home"; }
   if (t.dataset.view) state.view = t.dataset.view;
   if (t.dataset.more) state.open[t.dataset.more] = true;
+  if (t.dataset.qmore) state.openQuote[t.dataset.qmore] = !state.openQuote[t.dataset.qmore];
   if (t.dataset.flag) {
     const id = t.dataset.id;
     const key = t.dataset.flag;
