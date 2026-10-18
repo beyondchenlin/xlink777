@@ -27,9 +27,10 @@
   button { border: 0; background: transparent; font: inherit; color: inherit; padding: 0; cursor: pointer; }
   button svg { width: 18px; height: 18px; display: block; }
   button:disabled { cursor: default; }
-  .app { max-width: 430px; margin: 0 auto; min-height: 100dvh; background: #fff; position: relative; }
+  .app { max-width: 430px; margin: 0 auto; min-height: 100dvh; background: #fff; position: relative; overflow-x: hidden; }
   .top, .tabs { position: sticky; background: #fff; z-index: 5; }
-  .top { top: 0; height: 53px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
+  .top { top: 0; height: 53px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; overflow: hidden; }
+  svg.logo { width: 28px; height: 28px; flex: 0 0 28px; display: block; }
   .tabs { top: 53px; display: flex; align-items: stretch; border-bottom: 1px solid #eff3f4; }
   .tabs button { flex: 1; height: 53px; color: #536471; font-size: 15px; font-weight: 500; }
   .tabs button.on { color: #0f1419; font-weight: 700; position: relative; }
@@ -48,8 +49,10 @@
   .line { width: 2px; flex: 1; background: #cfd9de; margin-top: 4px; }
   .main { min-width: 0; flex: 1; }
   .row { display: flex; align-items: center; gap: 2px; min-width: 0; }
-  .name { font-weight: 700; white-space: nowrap; }
-  .handle { color: #536471; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .main > .row { flex-wrap: nowrap; }
+  .main > .row > .row { flex: 1; min-width: 0; overflow: hidden; gap: 4px; }
+  .name { font-weight: 700; white-space: nowrap; flex: none; }
+  .handle { color: #536471; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .badge { width: 16px; height: 16px; flex: none; }
   .tools { margin-left: auto; display: flex; color: #536471; flex: none; }
   .tools button { width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center; }
@@ -109,7 +112,7 @@ const people = {
   wan: { name: "晚晚", handle: "An_yhl", avatar: "avatars/wan.jpg" },
   liu: { name: "水族店刘老板", handle: "leo_xiuxiu", avatar: "avatars/flower.jpg", verified: true, gold: true }
 };
-const knownAvatar = { FanShifu: "avatars/fan.jpg", ai_chuhai: "avatars/hai.jpg", An_yhl: "avatars/wan.jpg", leo_xiuxiu: "avatars/flower.jpg" };
+const knownAvatar = { FanShifu: "avatars/fan.jpg", ai_chuhai: "avatars/hai.jpg", An_yhl: "avatars/wan.jpg", leo_xiuxiu: "avatars/flower.jpg", earnthread: "avatars/earn.jpg", AINoSleep: "avatars/ainosleep.jpg", wolong8848: "avatars/wolong.jpg" };
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "\u0026amp;",
@@ -231,7 +234,7 @@ async function loadFeed() {
 }
 const state = { tab: "forYou", view: "home", open: {}, flags: {}, toast: "", compose: false, draft: "" };
 const ico = {
-  x: '<svg class="logo" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+  x: '<svg class="logo" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
   home: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.15 12.52 1.16a1.3 1.3 0 0 0-1.04 0L2.4 7.15c-.25.17-.4.45-.4.75V21.1c0 .5.42.9.93.9H9.14c.51 0 .93-.4.93-.9v-7.08h3.9V21.1c0 .5.42.9.93.9h6.17c.51 0 .93-.4.93-.9V7.9c0-.3-.16-.58-.4-.75z"/></svg>',
   search: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.25 3.75a6.5 6.5 0 1 0 4.2 11.45l4.78 4.78 1.42-1.42-4.78-4.78a6.5 6.5 0 0 0-5.62-10.03zm-5 6.5a5 5 0 1 1 10 0 5 5 0 0 1-10 0z"/></svg>',
   grok: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.6c.5 3.4 2.2 5.6 5.6 6.8-3.4 1.2-5.1 3.4-5.6 6.8-.5-3.4-2.2-5.6-5.6-6.8C9.8 7.2 11.5 5 12 1.6z"/><path d="M18.6 13.2c.3 1.7 1.1 2.8 2.8 3.4-1.7.6-2.5 1.7-2.8 3.4-.3-1.7-1.1-2.8-2.8-3.4 1.7-.6 2.5-1.7 2.8-3.4z"/></svg>',
@@ -255,7 +258,7 @@ function person(id) { return people[id]; }
 function avatar(p, cls) {
   if (!p) return "";
   if (p.avatar) return `<img class="av ${cls || ""}" src="${esc(p.avatar)}" alt="">`;
-  return `<span class="av ${cls || ""}" style="display:grid;place-items:center;background:#1d9bf0;color:#fff;font-weight:700">${esc(p.initial || "外")}</span>`;
+  return `<span class="av ${cls || ""}" style="display:grid;place-items:center;background:#eff3f4;color:#0f1419;font-weight:700;font-size:15px">${esc(p.initial || "外")}</span>`;
 }
 function badges(p) {
   return `${p.verified ? `<span style="color:#1d9bf0">${ico.check}</span>` : ""}${p.gold ? `<span style="color:#e8a317">${ico.check}</span>` : ""}`;

@@ -57,7 +57,8 @@
       "link": "https://x.com/earnthread/status/2111805522102169931",
       "notes": "最常见建议。来源还提到 big_sensei、AlexFinn。",
       "verified": false,
-      "comments": []
+      "comments": [],
+      "avatar": "avatars/earn.jpg"
     },
     {
       "id": "2026-10-18-bio",
@@ -182,7 +183,8 @@
       "link": "https://x.com/AINoSleep/status/2111712252768469009",
       "notes": "Own high DR properties",
       "verified": true,
-      "comments": []
+      "comments": [],
+      "avatar": "avatars/ainosleep.jpg"
     },
     {
       "id": "2026-10-18-geo",
@@ -266,7 +268,8 @@
           "text": "是一个新词，老词没那么快见效",
           "date": "2026-10-18",
           "link": "https://x.com/wolong8848/status/2111774180085829755",
-          "likes": 1
+          "likes": 1,
+          "avatar": "avatars/wolong.jpg"
         },
         {
           "id": "2111771632780079200",
@@ -303,7 +306,8 @@
       },
       "replies": 18,
       "likes": 54,
-      "views": "4.6K"
+      "views": "4.6K",
+      "avatar": "avatars/wolong.jpg"
     }
   ]
 }
