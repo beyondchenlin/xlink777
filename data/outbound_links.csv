@@ -1,0 +1,10 @@
+date,type,content,source,author,link,notes
+2026-10-18,tip,主帖不放链接，链接放在第一条自我回复中，避免减少触达。 主帖保持独立价值，评论里再放链接。,xlink777,earnthread,https://x.com/earnthread/status/2111805522102169931,最常见建议。来源还提到 big_sensei、AlexFinn。
+2026-10-18,location,长期链接放在个人资料的 Bio 或 Website 字段，也可以用 Link-in-bio。 这个位置不挂在单条帖子上，是目前比较稳的放法。,xlink777,Buffer,https://s.ee/blog/get-more-website-traffic-from-x/,安全位置，不附加于单个帖子。
+2026-10-18,tip,优先文本、图片、视频和线程。链接只作补充。 Premium 账号发带链接的帖子表现更好；非 Premium 的链接帖参与可能接近于零。,xlink777,Buffer,https://buffer.com/resources/links-on-x/,Buffer 2025 分析。
+2026-10-18,method,把链接放在第一条回复，并写上 link below，或直接把链接贴在那里。 这样是把人推进评论区，而不是在主帖里硬塞链接。,xlink777,big_sensei,https://x.com/big_sensei/status/1996128574382727591,同样的做法也出现在 AlexFinn 的帖子里。
+2026-10-18,observation,2026 年中后期的数据里，链接惩罚可能已经减少或取消。Elon 说过超过一年没有罚；OpenTweet 的数据里，带链接的帖子并不更差。 仍然建议自己测，并优先用回复放链接。,xlink777,OpenTweet,https://opentweet.io/answers/does-x-penalize-links-2026,观察，不是保证。
+2026-10-18,position,主帖写有价值的内容，第一条自我回复里再放链接。 这是目前被提到最多的稳妥位置。,xlink777,X Community,https://x.com,Most recommended safe method
+2026-10-18,position,长期链接放在简介，或置顶帖。 适合一直要留着的地址，不适合只发一次的活动。,xlink777,X Community,https://x.com,Safest for permanent links
+2026-10-18,tip,自己建 GitHub 仓库、Chrome 扩展、NPM 包，再从这些地方链回站点。 这是在做自己的高权重资产，不是去借别人的评论区。,xlink777,AINoSleep,https://x.com/AINoSleep/status/2111712252768469009,Own high DR properties
+2026-10-18,method,用用户会问的方式写内容，让 AI 回答时引用你的页面。 外链和被 AI 引用可以一起做。,xlink777,Wolong,https://x.com/wolong8848/status/2111723648017113491,AI recommendation traffic

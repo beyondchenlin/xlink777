@@ -1,0 +1,113 @@
+{
+  "updated": "2026-10-18",
+  "posts": [
+    {
+      "id": "2026-10-18-self-reply",
+      "date": "2026-10-18",
+      "type": "tip",
+      "title": "链接放在第一条自我回复",
+      "content": "主帖不放链接，链接放在第一条自我回复中，避免减少触达。\n\n主帖保持独立价值，评论里再放链接。",
+      "author": "earnthread",
+      "handle": "earnthread",
+      "link": "https://x.com/earnthread/status/2111805522102169931",
+      "notes": "最常见建议。来源还提到 big_sensei、AlexFinn。",
+      "verified": false
+    },
+    {
+      "id": "2026-10-18-bio",
+      "date": "2026-10-18",
+      "type": "location",
+      "title": "个人资料 Bio / Website",
+      "content": "长期链接放在个人资料的 Bio 或 Website 字段，也可以用 Link-in-bio。\n\n这个位置不挂在单条帖子上，是目前比较稳的放法。",
+      "author": "Buffer",
+      "handle": "buffer",
+      "link": "https://s.ee/blog/get-more-website-traffic-from-x/",
+      "notes": "安全位置，不附加于单个帖子。",
+      "verified": false
+    },
+    {
+      "id": "2026-10-18-native",
+      "date": "2026-10-18",
+      "type": "tip",
+      "title": "先发原生内容，链接当补充",
+      "content": "优先文本、图片、视频和线程。链接只作补充。\n\nPremium 账号发带链接的帖子表现更好；非 Premium 的链接帖参与可能接近于零。",
+      "author": "Buffer",
+      "handle": "buffer",
+      "link": "https://buffer.com/resources/links-on-x/",
+      "notes": "Buffer 2025 分析。",
+      "verified": false
+    },
+    {
+      "id": "2026-10-18-link-below",
+      "date": "2026-10-18",
+      "type": "method",
+      "title": "第一回复写 link below",
+      "content": "把链接放在第一条回复，并写上 link below，或直接把链接贴在那里。\n\n这样是把人推进评论区，而不是在主帖里硬塞链接。",
+      "author": "big_sensei",
+      "handle": "big_sensei",
+      "link": "https://x.com/big_sensei/status/1996128574382727591",
+      "notes": "同样的做法也出现在 AlexFinn 的帖子里。",
+      "verified": false
+    },
+    {
+      "id": "2026-10-18-penalty",
+      "date": "2026-10-18",
+      "type": "observation",
+      "title": "链接惩罚可能已经减轻",
+      "content": "2026 年中后期的数据里，链接惩罚可能已经减少或取消。Elon 说过超过一年没有罚；OpenTweet 的数据里，带链接的帖子并不更差。\n\n仍然建议自己测，并优先用回复放链接。",
+      "author": "OpenTweet",
+      "handle": "opentweet",
+      "link": "https://opentweet.io/answers/does-x-penalize-links-2026",
+      "notes": "观察，不是保证。",
+      "verified": false
+    },
+    {
+      "id": "2026-10-18-first-reply-en",
+      "date": "2026-10-18",
+      "type": "position",
+      "title": "First Reply Method",
+      "content": "主帖写有价值的内容，第一条自我回复里再放链接。\n\n这是目前被提到最多的稳妥位置。",
+      "author": "X Community",
+      "handle": "xcommunity",
+      "link": "https://x.com",
+      "notes": "Most recommended safe method",
+      "verified": false
+    },
+    {
+      "id": "2026-10-18-pinned",
+      "date": "2026-10-18",
+      "type": "position",
+      "title": "Bio and Pinned Post",
+      "content": "长期链接放在简介，或置顶帖。\n\n适合一直要留着的地址，不适合只发一次的活动。",
+      "author": "X Community",
+      "handle": "xcommunity",
+      "link": "https://x.com",
+      "notes": "Safest for permanent links",
+      "verified": false
+    },
+    {
+      "id": "2026-10-18-dr",
+      "date": "2026-10-18",
+      "type": "tip",
+      "title": "自己做高权重资产",
+      "content": "自己建 GitHub 仓库、Chrome 扩展、NPM 包，再从这些地方链回站点。\n\n这是在做自己的高权重资产，不是去借别人的评论区。",
+      "author": "AINoSleep",
+      "handle": "AINoSleep",
+      "link": "https://x.com/AINoSleep/status/2111712252768469009",
+      "notes": "Own high DR properties",
+      "verified": true
+    },
+    {
+      "id": "2026-10-18-geo",
+      "date": "2026-10-18",
+      "type": "method",
+      "title": "GEO：让 AI 引用你",
+      "content": "用用户会问的方式写内容，让 AI 回答时引用你的页面。\n\n外链和被 AI 引用可以一起做。",
+      "author": "Wolong",
+      "handle": "wolong8848",
+      "link": "https://x.com/wolong8848/status/2111723648017113491",
+      "notes": "AI recommendation traffic",
+      "verified": false
+    }
+  ]
+}

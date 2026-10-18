@@ -1,5 +1,5 @@
 # Xlink777
 
-Light-mode X home feed, laid out like the mobile app: 为你推荐, quoted post, reply row, and the blue compose button.
+X 样式的外链记录页。版式在 index.html，内容在 data/feed.json。
 
-Original posts stay attributed to their authors. Avatars are original illustrations, not photos of those accounts.
+定时任务只追加 data/feed.json 和 data/outbound_links.csv，不要改 index.html。页面打开时会读取 GitHub 上的 data/feed.json，所以新记录推上去之后，刷新就能看到。
