@@ -63,7 +63,6 @@
   .quote .who { display: flex; align-items: center; gap: 4px; min-width: 0; }
   .quote p { margin: 4px 0 0; color: #0f1419; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; line-height: 20px; }
   .quote.open p { display: block; -webkit-line-clamp: unset; overflow: visible; }
-  .xlink { display: inline-flex; margin-top: 8px; color: #1d9bf0; font-weight: 700; font-size: 14px; text-decoration: none; }
   .acts { display: flex; align-items: center; justify-content: space-between; color: #536471; max-width: 100%; margin: 4px -4px 0; }
   .acts button { display: inline-flex; align-items: center; gap: 4px; min-width: 36px; height: 32px; padding: 0 2px; color: inherit; font-size: 13px; }
   .acts svg { width: 18px; height: 18px; }
@@ -72,6 +71,7 @@
   .acts .on-blue { color: #1d9bf0; }
   .tabs svg { width: 14px; height: 14px; }
   .acts .pair { display: flex; }
+  .acts a.jump { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 32px; color: #1d9bf0; }
   .replyrow { display: flex; align-items: flex-start; width: 100%; text-align: left; color: #536471; padding: 8px 16px 10px; gap: 12px; background: #fff; }
   .replyrow .slot { width: 40px; display: grid; place-items: center; flex: none; }
   .replyrow .body { flex: 1; min-width: 0; color: #0f1419; line-height: 20px; }
@@ -284,8 +284,7 @@ function postHtml(post) {
   const qtext = quote && quote.text ? quote.text : (quote ? quote.parts[0] : "");
   const qtime = quote ? (quote.time || "") : "";
   const qOpen = !!state.openQuote[post.id];
-  const qlink = quote && quote.link ? quote.link : "";
-  const q = qp ? `<div class="quote${qOpen ? " open" : ""}" data-qmore="${esc(post.id)}"><span class="who">${avatar(qp, "sm")}<span class="name">${esc(qp.name)}</span>${badges(qp)}<span class="handle">@${esc(qp.handle)}${qtime ? " · " + esc(qtime) : ""}</span></span><p>${esc(qtext)}${!qOpen && qtext.length > 70 ? ` <span class="more">显示更多</span>` : ""}</p>${qlink ? `<a class="xlink" href="${esc(qlink)}" target="_blank" rel="noopener">在 X 查看</a>` : ""}</div>` : "";
+  const q = qp ? `<div class="quote${qOpen ? " open" : ""}" data-qmore="${esc(post.id)}"><span class="who">${avatar(qp, "sm")}<span class="name">${esc(qp.name)}</span>${badges(qp)}<span class="handle">@${esc(qp.handle)}${qtime ? " · " + esc(qtime) : ""}</span></span><p>${esc(qtext)}${!qOpen && qtext.length > 70 ? ` <span class="more">显示更多</span>` : ""}</p></div>` : "";
   const reply = post.reply && post.reply.author ? post.reply : null;
   const comments = post.comments && post.comments.length ? post.comments : (reply ? [reply] : []);
   const commentHtml = comments.map((c) => `<div class="replyrow"><span class="slot">${avatar({ avatar: c.avatar || knownAvatar[c.handle] || "", initial: (c.author || "回").slice(0, 1) }, "md")}</span><span class="body"><b>${esc(c.author || "")}</b> <span class="who">@${esc(c.handle || "")}</span><br>${esc(c.text || "")}</span></div>`).join("");
@@ -307,10 +306,9 @@ function postHtml(post) {
         <button data-toast="${post.views} 次查看" aria-label="查看">${ico.views}<span>${post.views}</span></button>
         <span style="display:flex" class="pair">
           <button data-flag="bookmarked" data-id="${post.id}" class="${f.bookmarked ? "on-blue" : ""}" aria-label="书签">${ico.bookmark}</button>
-          <button data-copy="${post.id}" aria-label="分享">${ico.share}</button>
+          ${post.link ? `<a class="jump" href="${esc(post.link)}" target="_blank" rel="noopener" aria-label="打开原帖">${ico.share}</a>` : `<button data-copy="${post.id}" aria-label="分享">${ico.share}</button>`}
         </span>
       </div>
-      ${post.link ? `<a class="xlink" href="${esc(post.link)}" target="_blank" rel="noopener">在 X 查看原帖</a>` : ""}
     </div>
   </article>${commentHtml}`;
 }
