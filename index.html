@@ -48,7 +48,7 @@
   .media { display: block; width: 100%; margin-top: 12px; border-radius: 16px; border: 1px solid #cfd9de; object-fit: cover; max-height: 280px; }
   .tools button { width: 28px; height: 28px; color: #536471; }
   .tools svg { width: 18px; height: 18px; }
-  .post + .post, .replyrow + .post { border-top: 1px solid #eff3f4; }
+  .post + .post, .replyrow + .post, [data-post] + [data-post] { border-top: 1px solid #eff3f4; }
   .col { width: 40px; flex: none; display: flex; flex-direction: column; align-items: center; }
   .av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #cfd9de; }
   .av.sm { width: 20px; height: 20px; }
@@ -80,7 +80,8 @@
   .replyrow { display: flex; align-items: flex-start; width: 100%; text-align: left; color: #536471; padding: 8px 16px 10px; gap: 12px; background: #fff; }
   .replyrow .slot { width: 40px; display: grid; place-items: center; flex: none; }
   .replyrow .body { flex: 1; min-width: 0; color: #0f1419; line-height: 20px; }
-  .replyrow .who { color: #536471; font-size: 13px; }
+  .replies-head, .replies-empty { padding: 12px 16px; border-top: 1px solid #eff3f4; font-weight: 700; }
+  .replies-empty { color: #536471; font-weight: 400; }
   .dock { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); width: min(430px, 100%); z-index: 20; background: #fff; border-top: 1px solid #eff3f4; }
   .nav { height: 52px; display: flex; align-items: center; justify-content: space-around; background: #fff; }
   .nav button { width: 48px; height: 48px; display: grid; place-items: center; }
@@ -307,10 +308,10 @@ function rich(text) {
   return out + esc(text.slice(last));
 }
 function toast(text) { state.toast = text; render(); setTimeout(() => { state.toast = ""; render(); }, 1400); }
-function postHtml(post) {
+function postHtml(post, detail) {
   const p = person(post.user);
   const f = flag(post.id);
-  const open = state.open[post.id];
+  const open = detail || state.open[post.id];
   const parts = post.preview && !open ? post.parts.slice(0, post.preview) : post.parts;
   const quote = post.quote && post.quote.text ? post.quote : (post.quote ? find(post.quote) : null);
   const likes = post.likes + (f.liked ? 1 : 0);
@@ -325,7 +326,7 @@ function postHtml(post) {
   const comments = post.comments && post.comments.length ? post.comments : (reply ? [reply] : []);
   const commentHtml = comments.map((c) => `<div class="replyrow"><span class="slot">${avatar({ avatar: c.avatar || knownAvatar[c.handle] || "", initial: (c.author || "回").slice(0, 1) }, "md")}</span><span class="body"><b>${esc(c.author || "")}</b> <span class="who">@${esc(c.handle || "")}</span><br>${esc(c.text || "")}</span></div>`).join("");
   return `<article class="post" data-id="${post.id}">
-    <div class="col">${avatar(p, "")}${state.thread[post.id] && comments.length ? `<span class="line"></span>` : ""}</div>
+    <div class="col">${avatar(p, "")}</div>
     <div class="main">
       <div class="row">${nameRow(p, post.time)}
         <span class="tools">
@@ -337,7 +338,7 @@ function postHtml(post) {
       ${q}
       ${post.image ? `<img class="media" src="${esc(post.image)}" alt="">` : ""}
       <div class="acts">
-        <button data-thread="${post.id}" aria-label="回复">${ico.reply}<span>${comments.length || post.replies || ""}</span></button>
+        <button data-openpost="${post.id}" aria-label="回复">${ico.reply}<span>${comments.length || post.replies || ""}</span></button>
         <button data-flag="reposted" data-id="${post.id}" class="${f.reposted ? "on-repost" : ""}" aria-label="转发">${ico.repost}<span>${reposts || ""}</span></button>
         <button data-flag="liked" data-id="${post.id}" class="${f.liked ? "on-like" : ""}" aria-label="喜欢">${ico.heart}<span>${likes}</span></button>
         <button data-toast="${post.views} 次查看" aria-label="查看">${ico.views}<span>${post.views}</span></button>
@@ -347,10 +348,10 @@ function postHtml(post) {
         </span>
       </div>
     </div>
-  </article>${state.thread[post.id] ? commentHtml : ""}`;
+  </article>${detail ? `<div class="replies-head">回复</div>${comments.length ? commentHtml : `<div class="replies-empty">还没有评论</div>`}` : ""}`;
 }
 function feed() {
-  return posts.filter((p) => state.tab === "forYou" ? p.feed !== "following" : p.feed !== "forYou").map(postHtml).join("");
+  return posts.filter((p) => state.tab === "forYou" ? p.feed !== "following" : p.feed !== "forYou").map((p) => `<div data-post="${esc(p.id)}">${postHtml(p, false)}</div>`).join("");
 }
 function render() {
   const app = document.getElementById("app");
@@ -362,6 +363,9 @@ function render() {
         <button class="${state.tab === "following" ? "on" : ""}" data-tab="following">正在关注</button>
         <button class="plus" data-toast="列表已在这台页面演示里固定" aria-label="新建列表">${ico.plus}</button>
       </div>${feed()}<div class="pad"></div>`;
+  } else if (state.view === "post") {
+    const post = find(state.postId);
+    html = `<div class="sub"><button data-view="home">${ico.back}</button>帖子</div>${post ? postHtml(post, true) : ""}<div class="pad"></div>`;
   } else if (state.view === "search") {
     html = `<div class="search"><button data-view="home">${ico.back}</button><input id="q" placeholder="搜索" value="${state.q || ""}"></div>
       <div class="view"><h2 style="padding:12px 16px;margin:0">当前趋势</h2>
@@ -402,13 +406,21 @@ function render() {
 }
 document.body.addEventListener("click", (event) => {
   if (event.target.closest("a")) return;
-  const t = event.target.closest("[data-tab],[data-view],[data-more],[data-qmore],[data-thread],[data-flag],[data-copy],[data-toast],[data-compose],[data-close],[data-reply],#send,[data-open]");
-  if (!t) return;
+  const t = event.target.closest("[data-tab],[data-view],[data-more],[data-qmore],[data-openpost],[data-flag],[data-copy],[data-toast],[data-compose],[data-close],[data-reply],#send,[data-open]");
+  if (!t) {
+    const card = event.target.closest("[data-post]");
+    if (!card) return;
+    state.view = "post";
+    state.postId = card.dataset.post;
+    state.open[state.postId] = true;
+    render();
+    return;
+  }
   if (t.dataset.tab) { state.tab = t.dataset.tab; state.view = "home"; }
   if (t.dataset.view) state.view = t.dataset.view;
   if (t.dataset.more) state.open[t.dataset.more] = true;
   if (t.dataset.qmore) state.openQuote[t.dataset.qmore] = !state.openQuote[t.dataset.qmore];
-  if (t.dataset.thread) state.thread[t.dataset.thread] = !state.thread[t.dataset.thread];
+  if (t.dataset.openpost) { state.view = "post"; state.postId = t.dataset.openpost; state.open[state.postId] = true; }
   if (t.dataset.flag) {
     const id = t.dataset.id;
     const key = t.dataset.flag;
