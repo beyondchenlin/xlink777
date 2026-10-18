@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>X</title>
+<style>
+  :root {
+    --bg: #fff;
+    --fg: #0f1419;
+    --muted: #536471;
+    --line: #eff3f4;
+    --thread: #cfd9de;
+    --blue: #1d9bf0;
+    --like: #f91880;
+    --repost: #00ba7c;
+    --canvas: #f7f9f9;
+    --chip: #eff3f4;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--canvas); color: var(--fg); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 15px;
+    line-height: 1.35;
+  }
+  button svg { width: 18px; height: 18px; display: block; }
+  button:disabled { cursor: default; }
+  .app { max-width: 430px; margin: 0 auto; min-height: 100dvh; background: var(--bg); position: relative; }
+  .top, .tabs { position: sticky; background: rgba(255,255,255,.86); backdrop-filter: blur(12px); z-index: 5; }
+  .top { top: 0; height: 53px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
+  .tabs { top: 53px; display: flex; border-bottom: 1px solid var(--line); }
+  .tabs button { flex: 1; padding: 16px 0; position: relative; color: var(--muted); }
+  .tabs button.on { color: var(--fg); font-weight: 700; }
+  .tabs button.on::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 64px; height: 4px; border-radius: 999px; background: var(--fg); transform: translateX(-50%); }
+  .tabs .add { flex: 0 0 52px; color: var(--fg); }
+  .me { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: block; }
+  .dot { position: absolute; top: 0; right: 0; width: 10px; height: 10px; background: var(--blue); border: 2px solid #fff; border-radius: 50%; }
+  .rel { position: relative; }
+  .post { display: flex; gap: 12px; padding: 12px 16px 0; border-bottom: 1px solid var(--line); }
+  .col { width: 40px; flex: none; display: flex; flex-direction: column; align-items: center; }
+  .av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+  .av.sm { width: 20px; height: 20px; }
+  .av.md { width: 32px; height: 32px; }
+  .line { width: 2px; flex: 1; background: var(--thread); margin: 4px 0; }
+  .main { min-width: 0; flex: 1; }
+  .row { display: flex; align-items: center; gap: 2px; min-width: 0; }
+  .name { font-weight: 700; }
+  .handle { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .badge { width: 16px; height: 16px; flex: none; }
+  .tools { margin-left: auto; display: flex; color: var(--muted); }
+  .tools button, .iconbtn { width: 32px; height: 32px; border-radius: 999px; display: grid; place-items: center; }
+  .tools button:hover, .iconbtn:hover { background: #e8f5fd; color: var(--blue); }
+  .text p { margin: 12px 0 0; }
+  .text p:first-child { margin-top: 2px; }
+  .more { color: var(--blue); }
+  .quote { display: block; width: 100%; text-align: left; margin: 12px 0 4px; border: 1px solid var(--thread); border-radius: 16px; padding: 10px 12px; }
+  .quote p { margin: 6px 0 0; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+  .acts { display: flex; align-items: center; justify-content: space-between; color: var(--muted); margin: 2px 0 4px; }
+  .acts button { display: flex; align-items: center; gap: 4px; border-radius: 999px; padding: 6px 0; color: inherit; }
+  .acts svg { width: 18px; height: 18px; }
+  .acts .on-like { color: var(--like); }
+  .acts .on-repost { color: var(--repost); }
+  .acts .on-blue { color: var(--blue); }
+  .replyrow { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; color: var(--muted); padding: 4px 16px 12px; margin-top: -1px; border-bottom: 1px solid var(--line); }
+  .replyrow .slot { width: 40px; display: grid; place-items: center; flex: none; }
+  .dock { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); width: min(430px, 100%); z-index: 20; }
+  .nav { height: 52px; display: flex; align-items: center; justify-content: space-around; border-top: 1px solid var(--line); background: #fff; }
+  .nav button { width: 48px; height: 48px; display: grid; place-items: center; }
+  .nav svg { width: 26px; height: 26px; }
+  .fab { position: absolute; right: 16px; top: -64px; width: 56px; height: 56px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; box-shadow: 0 2px 8px rgba(15,20,25,.25); }
+  .fab svg { width: 28px; height: 28px; }
+  .sheet { position: fixed; inset: 0; background: rgba(15,20,25,.4); z-index: 30; display: flex; align-items: flex-end; justify-content: center; }
+  .panel { width: min(430px, 100%); background: #fff; border-radius: 16px 16px 0 0; padding-bottom: 16px; }
+  .panel headrow, .bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; }
+  textarea { width: 100%; border: 0; resize: none; font: inherit; font-size: 18px; outline: none; min-height: 120px; }
+  .send { background: var(--blue); color: #fff; border-radius: 999px; padding: 6px 16px; font-weight: 700; }
+  .send:disabled { opacity: .5; }
+  .composer { display: flex; gap: 12px; padding: 0 16px 12px; }
+  .hidden { display: none !important; }
+  .pad { height: 92px; }
+  .toast { position: fixed; left: 50%; bottom: 88px; transform: translateX(-50%); background: var(--fg); color: #fff; border-radius: 999px; padding: 8px 16px; z-index: 40; font-size: 14px; }
+  .view { padding: 8px 0 24px; }
+  .search { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: #fff; z-index: 6; }
+  .search input, .grok input { flex: 1; height: 40px; border: 0; border-radius: 999px; background: var(--chip); padding: 0 16px; font: inherit; outline: none; }
+  .trend { display: block; width: 100%; text-align: left; padding: 12px 16px; }
+  .trend small { color: var(--muted); }
+  .notice, .dm { display: flex; gap: 12px; width: 100%; text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); align-items: center; }
+  .sub { position: sticky; top: 0; background: rgba(255,255,255,.9); backdrop-filter: blur(12px); display: flex; align-items: center; gap: 16px; height: 53px; padding: 0 8px; border-bottom: 1px solid var(--line); z-index: 6; font-weight: 700; font-size: 17px; }
+  svg.logo { width: 28px; height: 28px; }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="dock" id="dock"></div>
+<script>
+const people = {
+  me: { name: "陈林", handle: "chenlin", avatar: "avatars/me.jpg" },
+  fan: { name: "范师傅", handle: "FanShifu", avatar: "avatars/fan.jpg", verified: true },
+  hai: { name: "爱出海", handle: "ai_chuhai", avatar: "avatars/hai.jpg", verified: true },
+  wan: { name: "晚晚", handle: "An_yhl", avatar: "avatars/wan.jpg" },
+  liu: { name: "水族店刘老板", handle: "leo_xiuxiu", avatar: "avatars/flower.jpg", verified: true, gold: true },
+  bei: { name: "阿北", handle: "abei_dev", avatar: "", initial: "北", verified: true }
+};
+const posts = [
+  {
+    id: "fan", user: "fan", time: "1天",
+    parts: [
+      "这位朋友做了很好的补充。建个 GitHub 仓库定期做项目版本更新，目的是让 Google 认定你是个专业性强的活站。",
+      "这事现在就可以让你的 bot 做。",
+      "后两项对于一波流网站成本太高，要花的精力比常规外链多得多，更适合品牌站。",
+      "而且像 arXiv 这种预发表平台，上面的垃圾论文数量，这几年在 AI 加持下也是指数级增长，给的链接还是 nofollow，你说传递的权重有多高我是不信的，能发高校网站、正规期刊另说。",
+      "对我们新手来说，方法没有 low 与不 low 之分，只有见不见效、ROI 如何。"
+    ],
+    preview: 3, quote: "hai", reply: "wan",
+    replies: 1, reposts: 1, likes: 14, views: "2.1K", feed: "forYou"
+  },
+  {
+    id: "hai", user: "hai", time: "1天",
+    parts: ["我教别人AI发外链是：做一个日更的 Github仓库，about那以及内容里带上你的网站锚文本；各种预印本的地方去出论文，外链与IP一起做；亚马逊以及 D4D去出书。这年头以前不会写工具，用AI现在开始学会SPAM了，觉得是条路子，不觉得方法很LOW吗？"],
+    replies: 6, reposts: 12, likes: 86, views: "18K", feed: "following"
+  },
+  {
+    id: "liu", user: "liu", time: "1天",
+    parts: ["流量密码！流量密码！流量密码！", "小红书正在举行《AI替我说》活动"],
+    replies: 3, reposts: 8, likes: 41, views: "9,420", feed: "forYou"
+  },
+  {
+    id: "bei", user: "bei", time: "5小时",
+    parts: ["仓库日更不必手写。一个定时任务：拉昨天的更新说明，改版本号，提交，推上去。", "Google 要的不是热闹，是这个地址还在长大。"],
+    replies: 4, reposts: 2, likes: 33, views: "4,002", feed: "both"
+  }
+];
+const state = { tab: "forYou", view: "home", open: {}, flags: {}, toast: "", compose: false, draft: "" };
+const ico = {
+  x: '<svg class="logo" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+  home: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.15 12.52 1.16a1.3 1.3 0 0 0-1.04 0L2.4 7.15c-.25.17-.4.45-.4.75V21.1c0 .5.42.9.93.9H9.14c.51 0 .93-.4.93-.9v-7.08h3.9V21.1c0 .5.42.9.93.9h6.17c.51 0 .93-.4.93-.9V7.9c0-.3-.16-.58-.4-.75z"/></svg>',
+  search: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.25 3.75a6.5 6.5 0 1 0 4.2 11.45l4.78 4.78 1.42-1.42-4.78-4.78a6.5 6.5 0 0 0-5.62-10.03zm-5 6.5a5 5 0 1 1 10 0 5 5 0 0 1-10 0z"/></svg>',
+  grok: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.6c.5 3.4 2.2 5.6 5.6 6.8-3.4 1.2-5.1 3.4-5.6 6.8-.5-3.4-2.2-5.6-5.6-6.8C9.8 7.2 11.5 5 12 1.6z"/><path d="M18.6 13.2c.3 1.7 1.1 2.8 2.8 3.4-1.7.6-2.5 1.7-2.8 3.4-.3-1.7-1.1-2.8-2.8-3.4 1.7-.6 2.5-1.7 2.8-3.4z"/></svg>',
+  bell: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 0 0-5-5.91V4a1 1 0 0 0-2 0v1.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5.5A2.5 2.5 0 0 1 4.5 3h15A2.5 2.5 0 0 1 22 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 18.5v-13zm2.5-.5a.5.5 0 0 0-.5.5v2.76l8 3.64 8-3.64V5.5a.5.5 0 0 0-.5-.5h-15zm15.5 5.46-8 3.64-8-3.64V18.5c0 .28.22.5.5.5h15a.5.5 0 0 0 .5-.5v-8.04z"/></svg>',
+  reply: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M1.75 10C1.75 5.58 5.33 2 9.76 2h4.36C18.62 2 22.25 5.64 22.25 10.13c0 2.96-1.6 5.68-4.2 7.11l-8.05 4.46v-3.69h-.07c-4.49.1-8.18-3.51-8.18-8.01zm8.01-6C6.44 4 3.75 6.69 3.75 10c0 3.37 2.77 6.08 6.14 6.01l.35-.01h1.76v2.3l5.09-2.81c1.95-1.08 3.16-3.13 3.16-5.36 0-3.39-2.74-6.13-6.13-6.13H9.76z"/></svg>',
+  repost: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 3.88 8.93 8.02 7.57 9.48 5.5 7.55V16c0 1.1.9 2 2 2H13v2H7.5c-2.21 0-4-1.79-4-4V7.55L1.43 9.48.07 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.21 0 4 1.79 4 4v8.45l2.07-1.93 1.36 1.46-4.43 4.14-4.43-4.14 1.36-1.46 2.07 1.93V8c0-1.1-.9-2-2-2z"/></svg>',
+  heart: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.7 5.5c-1.22-.06-2.68.51-3.88 2.02l-.82 1.1-.81-1.1C9.98 6.01 8.52 5.44 7.3 5.5 4.93 5.61 3.25 7.7 3.25 10c0 3.72 3.41 6.67 8.55 10.52l.2.15.2-.15c5.14-3.85 8.55-6.8 8.55-10.52 0-2.28-1.68-4.37-4.05-4.48z"/></svg>',
+  views: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.25 0v-7h2v7h-2z"/></svg>',
+  bookmark: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4.5C4 3.12 5.12 2 6.5 2h11C18.88 2 20 3.12 20 4.5V22l-8-4.5L4 22V4.5zm2.5-.5a.5.5 0 0 0-.5.5V19l6-3.38L18 19V4.5a.5.5 0 0 0-.5-.5h-11z"/></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.59 17.7 8.3l-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.4-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"/></svg>',
+  more: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm7 0a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm7 0a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 11V4h2v7h7v2h-7v7h-2v-7H4v-2h7z"/></svg>',
+  userplus: '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M15.2 4.8a3.6 3.6 0 1 1-7.2 0 3.6 3.6 0 0 1 7.2 0zM4.6 19.4c.4-3.4 3.2-5.6 7-5.6s6.6 2.2 7 5.6c.1.6-.4 1.1-1 1.1H5.6c-.6 0-1.1-.5-1-1.1zM19 8h-2v2h-2v2h2v2h2v-2h2v-2h-2V8z"/></svg>',
+  chev: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3.5 8.3 12 16.8l8.5-8.5-1.4-1.4L12 14 4.9 6.9 3.5 8.3z"/></svg>',
+  right: '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8.3 3.5 16.8 12 8.3 20.5l-1.4-1.4L14 12 6.9 4.9 7.3 3.5z"/></svg>',
+  back: '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.4 11H20v2H7.4l5.3 5.3-1.4 1.4L3.6 12l7.7-7.7 1.4 1.4L7.4 11z"/></svg>',
+  check: '<svg class="badge" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.8 14.4 3.7l2.8-.5 1 2.7 2.7 1-.5 2.8L22.2 12l-1.8 2.3.5 2.8-2.7 1-1 2.7-2.8-.5L12 22.2 9.6 20.3l-2.8.5-1-2.7-2.7-1 .5-2.8L2 12l1.6-2.3-.5-2.8 2.7-1 1-2.7 2.8.5L12 1.8zm-1.1 12.7-2.5-2.5 1.3-1.3 1.2 1.2 3.6-3.6 1.3 1.3-4.9 4.9z"/></svg>'
+};
+function person(id) { return people[id]; }
+function avatar(p, cls) {
+  if (p.avatar) return `<img class="av ${cls || ""}" src="${p.avatar}" alt="">`;
+  return `<span class="av ${cls || ""}" style="display:grid;place-items:center;background:#0f1419;color:#fff;font-weight:700">${p.initial}</span>`;
+}
+function badges(p) {
+  return `${p.verified ? `<span style="color:#1d9bf0">${ico.check}</span>` : ""}${p.gold ? `<span style="color:#e8a317">${ico.check}</span>` : ""}`;
+}
+function nameRow(p, time) {
+  return `<div class="row"><span class="name">${p.name}</span>${badges(p)}<span class="handle">@${p.handle}${time ? " · " + time : ""}</span></div>`;
+}
+function find(id) { return posts.find((p) => p.id === id); }
+function flag(id) { return state.flags[id] || { liked: false, reposted: false, bookmarked: false }; }
+function toast(text) { state.toast = text; render(); setTimeout(() => { state.toast = ""; render(); }, 1400); }
+function postHtml(post) {
+  const p = person(post.user);
+  const f = flag(post.id);
+  const open = state.open[post.id];
+  const parts = post.preview && !open ? post.parts.slice(0, post.preview) : post.parts;
+  const quote = post.quote ? find(post.quote) : null;
+  const likes = post.likes + (f.liked ? 1 : 0);
+  const reposts = post.reposts + (f.reposted ? 1 : 0);
+  const body = parts.map((t, i) => `<p>${t}${post.preview && !open && i === parts.length - 1 ? ` <span class="more" data-more="${post.id}">显示更多</span>` : ""}</p>`).join("");
+  const q = quote ? `<button class="quote" data-open="${quote.id}">${nameRow(person(quote.user), quote.time).replace('class="row"', 'class="row" style="font-size:14px"')}<p>${quote.parts[0]}</p></button>` : "";
+  return `<article class="post" data-id="${post.id}">
+    <div class="col">${avatar(p, "")}${post.reply ? `<span class="line"></span>` : ""}</div>
+    <div class="main">
+      <div class="row">${nameRow(p, post.time)}
+        <span class="tools">
+          <button data-copy="${post.id}" aria-label="分享">${ico.share}</button>
+          <button data-toast="已关注 @${p.handle}" aria-label="更多">${ico.more}</button>
+        </span>
+      </div>
+      <div class="text">${body}</div>
+      ${q}
+      <div class="acts">
+        <button data-reply="${post.id}" aria-label="回复">${ico.reply}<span>${post.replies || ""}</span></button>
+        <button data-flag="reposted" data-id="${post.id}" class="${f.reposted ? "on-repost" : ""}" aria-label="转发">${ico.repost}<span>${reposts || ""}</span></button>
+        <button data-flag="liked" data-id="${post.id}" class="${f.liked ? "on-like" : ""}" aria-label="喜欢">${ico.heart}<span>${likes}</span></button>
+        <button data-toast="${post.views} 次查看" aria-label="查看">${ico.views}<span>${post.views}</span></button>
+        <span style="display:flex">
+          <button data-flag="bookmarked" data-id="${post.id}" class="${f.bookmarked ? "on-blue" : ""}" aria-label="书签">${ico.bookmark}</button>
+          <button data-copy="${post.id}" aria-label="分享">${ico.share}</button>
+        </span>
+      </div>
+    </div>
+  </article>${post.reply ? `<button class="replyrow" data-open="${post.id}"><span class="slot">${avatar(person(post.reply), "md")}</span><span style="flex:1">${person(post.reply).name} 已回复</span>${ico.right}</button>` : ""}`;
+}
+function feed() {
+  return posts.filter((p) => state.tab === "forYou" ? p.feed !== "following" : p.feed !== "forYou").map(postHtml).join("");
+}
+function render() {
+  const app = document.getElementById("app");
+  let html = "";
+  if (state.view === "home") {
+    html = `<header class="top"><button class="rel" data-view="profile">${avatar(people.me, "me")}<span class="dot"></span></button>${ico.x}<button data-toast="当前账号 @chenlin">${ico.userplus}</button></header>
+      <div class="tabs">
+        <button class="${state.tab === "forYou" ? "on" : ""}" data-tab="forYou">为你推荐 ${ico.chev}</button>
+        <button class="${state.tab === "following" ? "on" : ""}" data-tab="following">正在关注</button>
+        <button class="add" data-toast="列表已在这台页面演示里固定">${ico.plus}</button>
+      </div>${feed()}<div class="pad"></div>`;
+  } else if (state.view === "search") {
+    html = `<div class="search"><button data-view="home">${ico.back}</button><input id="q" placeholder="搜索" value="${state.q || ""}"></div>
+      <div class="view"><h2 style="padding:12px 16px;margin:0">当前趋势</h2>
+      ${["AI替我说","GitHub 日更","活站","锚文本"].map((t) => `<button class="trend" data-toast="已搜索 ${t}"><small>正在流行</small><div><b>${t}</b></div></button>`).join("")}
+      </div><div class="pad"></div>`;
+  } else if (state.view === "grok") {
+    html = `<div class="sub"><button data-view="home">${ico.back}</button>Grok</div>
+      <div class="view" style="min-height:70dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px">
+        ${ico.grok}<p style="font-size:24px;font-weight:800">有什么可以帮忙的？</p>
+        <button class="trend" data-toast="先做会自己更新的仓库。一波流站点先别碰预印本和出书。">怎么把 GitHub 仓库做成活站？</button>
+      </div>`;
+  } else if (state.view === "notifications") {
+    html = `<div class="sub"><button data-view="home">${ico.back}</button>通知</div>
+      <button class="notice" data-open="fan">${avatar(people.wan)}<span><b>晚晚</b> 回复了你<br><small style="color:#536471">仓库更新好办，别最后全是 bot 在改 README 就行。</small></span></button>
+      <button class="notice" data-open="fan">${avatar(people.fan)}<span><b>范师傅</b> 的帖子有 14 个喜欢</span></button>`;
+  } else if (state.view === "messages") {
+    html = `<div class="sub"><button data-view="home">${ico.back}</button>私信</div>
+      <button class="dm" data-toast="晚晚：仓库更新好办，别最后全是 bot 在改 README 就行。">${avatar(people.wan)}<span><b>晚晚</b> <small style="color:#536471">@An_yhl</small><br><small style="color:#536471">仓库更新好办，别最后全是 bot 在改 README 就行。</small></span></button>
+      <button class="dm" data-toast="刘老板：流量密码！">${avatar(people.liu)}<span><b>水族店刘老板</b><br><small style="color:#536471">流量密码！流量密码！流量密码！</small></span></button>`;
+  } else if (state.view === "profile") {
+    html = `<div class="sub"><button data-view="home">${ico.back}</button>陈林</div>
+      <div style="padding:16px">${avatar(people.me, "")}<h2 style="margin:12px 0 0">陈林</h2><div style="color:#536471">@chenlin</div><p>把网站做成活的。仓库日更，锚文本写清楚。</p><div><b>86</b> <span style="color:#536471">正在关注</span>　<b>128</b> <span style="color:#536471">关注者</span></div></div>`;
+  }
+  if (state.compose) {
+    html += `<div class="sheet"><div class="panel"><div class="bar"><button data-close>${ico.back}</button><button class="send" id="send" ${state.draft.trim() ? "" : "disabled"}>发帖</button></div>
+      <div class="composer">${avatar(people.me)}<textarea id="draft" placeholder="有什么新鲜事？">${state.draft}</textarea></div></div></div>`;
+  }
+  if (state.toast) html += `<div class="toast">${state.toast}</div>`;
+  app.innerHTML = html;
+  document.getElementById("dock").innerHTML = `<button class="fab" data-compose aria-label="发帖">${ico.plus}</button>
+    <nav class="nav">
+      ${[["home","主页",ico.home],["search","搜索",ico.search],["grok","Grok",ico.grok],["notifications","通知",ico.bell],["messages","私信",ico.mail]].map(([id,label,icon]) => `<button data-view="${id}" aria-label="${label}">${icon}</button>`).join("")}
+    </nav>`;
+  const draft = document.getElementById("draft");
+  if (draft) {
+    draft.addEventListener("input", () => { state.draft = draft.value; document.getElementById("send").disabled = !draft.value.trim(); });
+    draft.focus();
+  }
+}
+document.body.addEventListener("click", (event) => {
+  const t = event.target.closest("[data-tab],[data-view],[data-more],[data-flag],[data-copy],[data-toast],[data-compose],[data-close],[data-reply],#send,[data-open]");
+  if (!t) return;
+  if (t.dataset.tab) { state.tab = t.dataset.tab; state.view = "home"; }
+  if (t.dataset.view) state.view = t.dataset.view;
+  if (t.dataset.more) state.open[t.dataset.more] = true;
+  if (t.dataset.flag) {
+    const id = t.dataset.id;
+    const key = t.dataset.flag;
+    const cur = flag(id);
+    state.flags[id] = { ...cur, [key]: !cur[key] };
+    if (key === "bookmarked") state.toast = state.flags[id].bookmarked ? "已加入书签" : "已移出书签";
+  }
+  if (t.dataset.copy) { navigator.clipboard?.writeText("https://x.com/FanShifu/status/2111360655467127171"); state.toast = "链接已复制"; }
+  if (t.dataset.toast && !t.dataset.flag) state.toast = t.dataset.toast;
+  if (t.dataset.compose || t.dataset.reply) { state.compose = true; }
+  if (t.dataset.close) state.compose = false;
+  if (t.id === "send" && state.draft.trim()) {
+    posts.unshift({ id: "me" + Date.now(), user: "me", time: "现在", parts: [state.draft.trim()], replies: 0, reposts: 0, likes: 0, views: "1", feed: "both" });
+    state.draft = ""; state.compose = false; state.view = "home"; state.tab = "forYou"; state.toast = "你的帖子已发送";
+  }
+  if (t.dataset.open) { state.view = "home"; state.tab = "forYou"; const el = document.querySelector(`[data-id="${t.dataset.open}"]`); }
+  render();
+  if (state.toast) setTimeout(() => { if (state.toast) { state.toast = ""; render(); } }, 1400);
+});
+render();
+</script>
+</body>
+</html>
