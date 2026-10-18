@@ -30,9 +30,21 @@
       "reply": {
         "author": "晚晚",
         "handle": "An_yhl",
-        "avatar": "avatars/wan.jpg",
-        "text": "仓库更新好办，别最后全是 bot 在改 README 就行。"
-      }
+        "text": "仓库更新好办，别最后全是 bot 在改 README 就行。",
+        "avatar": "avatars/wan.jpg"
+      },
+      "comments": [
+        {
+          "id": "2111396883503685905",
+          "author": "晚晚",
+          "handle": "An_yhl",
+          "avatar": "avatars/wan.jpg",
+          "text": "仓库更新好办，别最后全是 bot 在改 README 就行。",
+          "date": "2026-10-17",
+          "link": "https://x.com/An_yhl/status/2111396883503685905",
+          "likes": 0
+        }
+      ]
     },
     {
       "id": "2026-10-18-self-reply",
@@ -44,7 +56,8 @@
       "handle": "earnthread",
       "link": "https://x.com/earnthread/status/2111805522102169931",
       "notes": "最常见建议。来源还提到 big_sensei、AlexFinn。",
-      "verified": false
+      "verified": false,
+      "comments": []
     },
     {
       "id": "2026-10-18-bio",
@@ -56,7 +69,8 @@
       "handle": "buffer",
       "link": "https://s.ee/blog/get-more-website-traffic-from-x/",
       "notes": "安全位置，不附加于单个帖子。",
-      "verified": false
+      "verified": false,
+      "comments": []
     },
     {
       "id": "2026-10-18-native",
@@ -68,7 +82,8 @@
       "handle": "buffer",
       "link": "https://buffer.com/resources/links-on-x/",
       "notes": "Buffer 2025 分析。",
-      "verified": false
+      "verified": false,
+      "comments": []
     },
     {
       "id": "2026-10-18-link-below",
@@ -80,7 +95,42 @@
       "handle": "big_sensei",
       "link": "https://x.com/big_sensei/status/1996128574382727591",
       "notes": "同样的做法也出现在 AlexFinn 的帖子里。",
-      "verified": false
+      "verified": false,
+      "comments": [
+        {
+          "id": "2000194196632703052",
+          "author": "BossBrownShugar(BBS)",
+          "handle": "DeQueenofSpaces",
+          "text": "I love this series 😍😍",
+          "date": "2025-12-14",
+          "link": "https://x.com/DeQueenofSpaces/status/2000194196632703052",
+          "likes": 1
+        },
+        {
+          "id": "1999543661588046284",
+          "author": "Moses Elijah",
+          "handle": "lish_madethis",
+          "text": "Once heard about this adding of links to main tweet. I guess this should be a reminder!",
+          "date": "2025-12-12",
+          "link": "https://x.com/lish_madethis/status/1999543661588046284",
+          "likes": 0
+        },
+        {
+          "id": "1996552668173783202",
+          "author": "Kayo",
+          "handle": "theWeb3warden",
+          "text": "This actually made me learn something new. I'm going to implement too",
+          "date": "2025-12-04",
+          "link": "https://x.com/theWeb3warden/status/1996552668173783202",
+          "likes": 0
+        }
+      ],
+      "reply": {
+        "author": "BossBrownShugar(BBS)",
+        "handle": "DeQueenofSpaces",
+        "text": "I love this series 😍😍"
+      },
+      "replies": 3
     },
     {
       "id": "2026-10-18-penalty",
@@ -92,7 +142,8 @@
       "handle": "opentweet",
       "link": "https://opentweet.io/answers/does-x-penalize-links-2026",
       "notes": "观察，不是保证。",
-      "verified": false
+      "verified": false,
+      "comments": []
     },
     {
       "id": "2026-10-18-first-reply-en",
@@ -104,7 +155,8 @@
       "handle": "xcommunity",
       "link": "https://x.com",
       "notes": "Most recommended safe method",
-      "verified": false
+      "verified": false,
+      "comments": []
     },
     {
       "id": "2026-10-18-pinned",
@@ -116,7 +168,8 @@
       "handle": "xcommunity",
       "link": "https://x.com",
       "notes": "Safest for permanent links",
-      "verified": false
+      "verified": false,
+      "comments": []
     },
     {
       "id": "2026-10-18-dr",
@@ -128,7 +181,8 @@
       "handle": "AINoSleep",
       "link": "https://x.com/AINoSleep/status/2111712252768469009",
       "notes": "Own high DR properties",
-      "verified": true
+      "verified": true,
+      "comments": []
     },
     {
       "id": "2026-10-18-geo",
@@ -140,7 +194,116 @@
       "handle": "wolong8848",
       "link": "https://x.com/wolong8848/status/2111723648017113491",
       "notes": "AI recommendation traffic",
-      "verified": false
+      "verified": false,
+      "comments": [
+        {
+          "id": "2111752343972872479",
+          "author": "不倒翁阿奇",
+          "handle": "AQ37377",
+          "text": "太牛！",
+          "date": "2026-10-18",
+          "link": "https://x.com/AQ37377/status/2111752343972872479",
+          "likes": 1
+        },
+        {
+          "id": "2111753004068299089",
+          "author": "新加坡阿涛Mac租赁",
+          "handle": "wangwenze20",
+          "text": "帅",
+          "date": "2026-10-18",
+          "link": "https://x.com/wangwenze20/status/2111753004068299089",
+          "likes": 1
+        },
+        {
+          "id": "2111737832893276543",
+          "author": "Wu",
+          "handle": "Wuc436",
+          "text": "加油💪",
+          "date": "2026-10-18",
+          "link": "https://x.com/Wuc436/status/2111737832893276543",
+          "likes": 1
+        },
+        {
+          "id": "2111826301493678526",
+          "author": "黄雷（重塑中.......）",
+          "handle": "huangle96936855",
+          "text": "我也在通过哥飞公号学出海热词站，多交流🤝",
+          "date": "2026-10-18",
+          "link": "https://x.com/huangle96936855/status/2111826301493678526",
+          "likes": 0
+        },
+        {
+          "id": "2111811869958926764",
+          "author": "小赫｜AI产品实战",
+          "handle": "zhouruhe5416",
+          "text": "把「用户会怎么问 GPT、它为什么推别的站」直接丢给 codex 改，这步比瞎堆外链清楚多了。你喂进去的是完整对话，还是只摘了它给的推荐理由？",
+          "date": "2026-10-18",
+          "link": "https://x.com/zhouruhe5416/status/2111811869958926764",
+          "likes": 0
+        },
+        {
+          "id": "2111796306343817571",
+          "author": "sunshineLx",
+          "handle": "ios_1261142602",
+          "text": "恭喜恭喜🎉",
+          "date": "2026-10-18",
+          "link": "https://x.com/ios_1261142602/status/2111796306343817571",
+          "likes": 0
+        },
+        {
+          "id": "2111794940686549216",
+          "author": "Hobson",
+          "handle": "yafeishi",
+          "text": "「416 曝光、34 点击、3 个注册、一单 9.99 刀」这组数我算了下，点击率 8% 左右，注册到付费三分之一，后半段挺健康，卡的还是曝光量。我这边也在折腾 GEO，好奇你让 codex 主要改的是页面正文，还是结构化数据这类？",
+          "date": "2026-10-18",
+          "link": "https://x.com/yafeishi/status/2111794940686549216",
+          "likes": 0
+        },
+        {
+          "id": "2111774180085829755",
+          "author": "卧龙先生",
+          "handle": "wolong8848",
+          "text": "是一个新词，老词没那么快见效",
+          "date": "2026-10-18",
+          "link": "https://x.com/wolong8848/status/2111774180085829755",
+          "likes": 1
+        },
+        {
+          "id": "2111771632780079200",
+          "author": "愚公",
+          "handle": "chongjiejing",
+          "text": "出的订阅还是积分包",
+          "date": "2026-10-18",
+          "link": "https://x.com/chongjiejing/status/2111771632780079200",
+          "likes": 0
+        },
+        {
+          "id": "2111769815128109314",
+          "author": "飞身踢",
+          "handle": "alistyun1x",
+          "text": "以用户角度反问 GPT 这招确实妙，我之前都是闷头堆内容，从来没想过还能这么反推它的推荐逻辑。stripe 那个通知我也踩过坑，第一笔到账一点动静都没有，差点以为没成功 😂",
+          "date": "2026-10-18",
+          "link": "https://x.com/alistyun1x/status/2111769815128109314",
+          "likes": 0
+        },
+        {
+          "id": "2111757470830153801",
+          "author": "山有木ai",
+          "handle": "SaplingBuilds",
+          "text": "恭喜恭喜，这些新词的需求确实是强，成单率确实是高。",
+          "date": "2026-10-18",
+          "link": "https://x.com/SaplingBuilds/status/2111757470830153801",
+          "likes": 0
+        }
+      ],
+      "reply": {
+        "author": "不倒翁阿奇",
+        "handle": "AQ37377",
+        "text": "太牛！"
+      },
+      "replies": 18,
+      "likes": 54,
+      "views": "4.6K"
     }
   ]
 }
