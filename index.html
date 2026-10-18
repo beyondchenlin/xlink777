@@ -101,8 +101,13 @@
 <div class="dock" id="dock"></div>
 <script>
 const people = {
-  me: { name: "陈林", handle: "chenlin", avatar: "avatars/me.jpg" }
+  me: { name: "陈林", handle: "chenlin", avatar: "avatars/me.jpg" },
+  fan: { name: "范师傅", handle: "FanShifu", avatar: "avatars/fan.jpg", verified: true },
+  hai: { name: "爱出海", handle: "ai_chuhai", avatar: "avatars/hai.jpg", verified: true },
+  wan: { name: "晚晚", handle: "An_yhl", avatar: "avatars/wan.jpg" },
+  liu: { name: "水族店刘老板", handle: "leo_xiuxiu", avatar: "avatars/flower.jpg", verified: true, gold: true }
 };
+const knownAvatar = { FanShifu: "avatars/fan.jpg", ai_chuhai: "avatars/hai.jpg", An_yhl: "avatars/wan.jpg", leo_xiuxiu: "avatars/flower.jpg" };
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "\u0026amp;",
@@ -144,26 +149,46 @@ function recordFrom(row) {
   const content = row.content || row.description || "";
   const type = row.type || row.category || "tip";
   const id = row.id || [row.date || "day", type, link || title || content.slice(0, 24)].join("-");
-  return { id, date: row.date || "", type, title, content, author, handle, link, notes: row.notes || row.recommended_site_or_method || "", verified: row.verified === true || row.verified === "true" };
+  return {
+    id, date: row.date || "", type, title, content, author, handle, link,
+    notes: row.notes || row.recommended_site_or_method || "",
+    avatar: row.avatar || "", time: row.time || "",
+    preview: Number(row.preview || 0),
+    likes: Number(row.likes || 0), replies: Number(row.replies || 0), reposts: Number(row.reposts || 0),
+    views: row.views || "", quote: row.quote || null, reply: row.reply || null,
+    verified: row.verified === true || row.verified === "true"
+  };
 }
 function toPost(row) {
   const r = recordFrom(row);
-  people[r.id] = { name: r.author, handle: r.handle, avatar: "", initial: (r.author || "外").slice(0, 1), verified: r.verified };
+  const avatar = r.avatar || knownAvatar[r.handle] || "";
+  people[r.id] = { name: r.author, handle: r.handle, avatar, initial: (r.author || "外").slice(0, 1), verified: r.verified };
   const parts = [];
   if (r.title) parts.push(r.title);
   String(r.content).split(/\n\n/).forEach((p) => { if (p.trim()) parts.push(p.trim()); });
   if (r.notes) parts.push(r.notes);
-  const typeName = { tip: "技巧", location: "位置", position: "位置", method: "方法", methodology: "方法", observation: "观察" }[r.type] || r.type;
+  const typeName = { tip: "技巧", location: "位置", position: "位置", method: "方法", methodology: "方法", observation: "观察", post: "" }[r.type] || "";
+  const dateLabel = r.date ? r.date.slice(5).replace("-", "月") + "日" : "";
   return {
-    id: r.id, user: r.id, time: (r.date ? r.date.slice(5).replace("-", "月") + "日" : "") + " · " + typeName,
+    id: r.id, user: r.id,
+    time: r.time || [dateLabel, typeName].filter(Boolean).join(" · "),
     parts: parts.length ? parts : ["（这条记录是空的）"],
-    preview: parts.length > 3 ? 3 : 0,
-    replies: 0, reposts: 0, likes: 0, views: "",
-    feed: "both", link: r.link
+    preview: r.preview || 0,
+    replies: r.replies, reposts: r.reposts, likes: r.likes, views: r.views,
+    feed: "both", link: r.link, quote: r.quote, reply: r.reply
   };
 }
+const featured = {
+  id: "2111360655467127171", date: "2026-10-17", type: "post", title: "", time: "1天",
+  content: "这位朋友做了很好的补充。建个 GitHub 仓库定期做项目版本更新，目的是让 Google 认定你是个专业性强的活站。\n\n这事现在就可以让你的 bot 做。\n\n后两项对于一波流网站成本太高，要花的精力比常规外链多得多，更适合品牌站。\n\n而且像 arXiv 这种预发表平台，上面的垃圾论文数量，这几年在 AI 加持下也是指数级增长，给的链接还是 nofollow，你说传递的权重有多高我是不信的，能发高校网站、正规期刊另说。\n\n对我们新手来说，方法没有 low 与不 low 之分，只有见不见效、ROI 如何。",
+  author: "范师傅", handle: "FanShifu", avatar: "avatars/fan.jpg",
+  link: "https://x.com/FanShifu/status/2111360655467127171",
+  notes: "", verified: true, preview: 3, replies: 1, reposts: 1, likes: 14, views: "2.1K",
+  quote: { author: "爱出海", handle: "ai_chuhai", avatar: "avatars/hai.jpg", verified: true, time: "1天", text: "我教别人AI发外链是：做一个日更的Github仓库，about那以及内容里带上你的网站锚文本；各种预印本的地方去出论文，外链与IP一起做；亚马逊以及D4D去出书。这年头以前不会写工具，用AI现在开始学会SPAM了，觉得是条路子，不觉得方法很LOW吗？" },
+  reply: { author: "晚晚", handle: "An_yhl", avatar: "avatars/wan.jpg", text: "仓库更新好办，别最后全是 bot 在改 README 就行。" }
+};
 const seed = [{"id":"2026-10-18-self-reply","date":"2026-10-18","type":"tip","title":"链接放在第一条自我回复","content":"主帖不放链接，链接放在第一条自我回复中，避免减少触达。\n\n主帖保持独立价值，评论里再放链接。","author":"earnthread","handle":"earnthread","link":"https://x.com/earnthread/status/2111805522102169931","notes":"最常见建议。来源还提到 big_sensei、AlexFinn。","verified":false},{"id":"2026-10-18-bio","date":"2026-10-18","type":"location","title":"个人资料 Bio / Website","content":"长期链接放在个人资料的 Bio 或 Website 字段，也可以用 Link-in-bio。\n\n这个位置不挂在单条帖子上，是目前比较稳的放法。","author":"Buffer","handle":"buffer","link":"https://s.ee/blog/get-more-website-traffic-from-x/","notes":"安全位置，不附加于单个帖子。","verified":false},{"id":"2026-10-18-native","date":"2026-10-18","type":"tip","title":"先发原生内容，链接当补充","content":"优先文本、图片、视频和线程。链接只作补充。\n\nPremium 账号发带链接的帖子表现更好；非 Premium 的链接帖参与可能接近于零。","author":"Buffer","handle":"buffer","link":"https://buffer.com/resources/links-on-x/","notes":"Buffer 2025 分析。","verified":false},{"id":"2026-10-18-link-below","date":"2026-10-18","type":"method","title":"第一回复写 link below","content":"把链接放在第一条回复，并写上 link below，或直接把链接贴在那里。\n\n这样是把人推进评论区，而不是在主帖里硬塞链接。","author":"big_sensei","handle":"big_sensei","link":"https://x.com/big_sensei/status/1996128574382727591","notes":"同样的做法也出现在 AlexFinn 的帖子里。","verified":false},{"id":"2026-10-18-penalty","date":"2026-10-18","type":"observation","title":"链接惩罚可能已经减轻","content":"2026 年中后期的数据里，链接惩罚可能已经减少或取消。Elon 说过超过一年没有罚；OpenTweet 的数据里，带链接的帖子并不更差。\n\n仍然建议自己测，并优先用回复放链接。","author":"OpenTweet","handle":"opentweet","link":"https://opentweet.io/answers/does-x-penalize-links-2026","notes":"观察，不是保证。","verified":false},{"id":"2026-10-18-dr","date":"2026-10-18","type":"tip","title":"自己做高权重资产","content":"自己建 GitHub 仓库、Chrome 扩展、NPM 包，再从这些地方链回站点。\n\n这是在做自己的高权重资产，不是去借别人的评论区。","author":"AINoSleep","handle":"AINoSleep","link":"https://x.com/AINoSleep/status/2111712252768469009","notes":"Own high DR properties","verified":true},{"id":"2026-10-18-geo","date":"2026-10-18","type":"method","title":"GEO：让 AI 引用你","content":"用用户会问的方式写内容，让 AI 回答时引用你的页面。\n\n外链和被 AI 引用可以一起做。","author":"Wolong","handle":"wolong8848","link":"https://x.com/wolong8848/status/2111723648017113491","notes":"AI recommendation traffic","verified":false}];
-let posts = seed.map(toPost);
+let posts = [toPost(featured)].concat(seed.map(toPost));
 let synced = "正在读取 GitHub 上的外链记录…";
 function merge(rows) {
   const out = [];
@@ -195,9 +220,10 @@ async function loadFeed() {
   }
   const mapped = merge(found).map(toPost);
   if (mapped.length) {
+    if (!mapped.some((p) => p.id === featured.id)) mapped.unshift(toPost(featured));
     posts = mapped;
-    synced = "已同步 " + posts.length + " 条 · 每日任务写入 data/feed.json 后，刷新即可出现";
-  } else synced = "GitHub 暂时读不到，先显示页面里的初始记录";
+    synced = "已同步 " + posts.length + " 条";
+  } else synced = "GitHub 暂时读不到，先显示页面里的记录";
   render();
 }
 const state = { tab: "forYou", view: "home", open: {}, flags: {}, toast: "", compose: false, draft: "" };
@@ -224,7 +250,8 @@ const ico = {
 };
 function person(id) { return people[id]; }
 function avatar(p, cls) {
-  if (p.avatar) return `<img class="av ${cls || ""}" src="${p.avatar}" alt="">`;
+  if (!p) return "";
+  if (p.avatar) return `<img class="av ${cls || ""}" src="${esc(p.avatar)}" alt="">`;
   return `<span class="av ${cls || ""}" style="display:grid;place-items:center;background:#1d9bf0;color:#fff;font-weight:700">${esc(p.initial || "外")}</span>`;
 }
 function badges(p) {
@@ -241,13 +268,15 @@ function postHtml(post) {
   const f = flag(post.id);
   const open = state.open[post.id];
   const parts = post.preview && !open ? post.parts.slice(0, post.preview) : post.parts;
-  const quote = post.quote ? find(post.quote) : null;
+  const quote = post.quote && post.quote.text ? post.quote : (post.quote ? find(post.quote) : null);
   const likes = post.likes + (f.liked ? 1 : 0);
   const reposts = post.reposts + (f.reposted ? 1 : 0);
-  const body = parts.map((t, i) => `<p>${esc(t)}${post.preview && !open && i === parts.length - 1 ? ` <span class="more" data-more="${post.id}">显示更多</span>` : ""}</p>`).join("");
-  const link = post.link ? `<a class="out" href="${esc(post.link)}" target="_blank" rel="noopener">${esc(post.link.replace(/^https?:\/\//, ""))}</a>` : "";
-  const qp = quote ? person(quote.user) : null;
-  const q = quote ? `<button class="quote" data-open="${quote.id}"><span class="who">${avatar(qp, "sm")}<span class="name">${qp.name}</span>${badges(qp)}<span class="handle">@${qp.handle} · ${quote.time}</span></span><p>${quote.parts[0]}</p></button>` : "";
+  const body = parts.map((t, i) => `<p>${esc(t)}${post.preview && !open && i === parts.length - 1 ? ` <span class="more" data-more="${esc(post.id)}">显示更多</span>` : ""}</p>`).join("");
+  const qp = quote && quote.text ? { name: quote.author, handle: quote.handle, avatar: quote.avatar || knownAvatar[quote.handle] || "", verified: !!quote.verified, initial: (quote.author || "引").slice(0, 1) } : (quote ? person(quote.user) : null);
+  const qtext = quote && quote.text ? quote.text : (quote ? quote.parts[0] : "");
+  const qtime = quote ? (quote.time || "") : "";
+  const q = qp ? `<div class="quote"><span class="who">${avatar(qp, "sm")}<span class="name">${esc(qp.name)}</span>${badges(qp)}<span class="handle">@${esc(qp.handle)}${qtime ? " · " + esc(qtime) : ""}</span></span><p>${esc(qtext)}</p></div>` : "";
+  const reply = post.reply && post.reply.author ? post.reply : null;
   return `<article class="post" data-id="${post.id}">
     <div class="col">${avatar(p, "")}${post.reply ? `<span class="line"></span>` : ""}</div>
     <div class="main">
@@ -258,7 +287,6 @@ function postHtml(post) {
         </span>
       </div>
       <div class="text">${body}</div>
-      ${link}
       ${q}
       <div class="acts">
         <button data-reply="${post.id}" aria-label="回复">${ico.reply}<span>${post.replies || ""}</span></button>
@@ -271,7 +299,7 @@ function postHtml(post) {
         </span>
       </div>
     </div>
-  </article>${post.reply ? `<button class="replyrow" data-open="${post.id}"><span class="slot">${avatar(person(post.reply), "md")}</span><span style="flex:1">${person(post.reply).name} 已回复</span>${ico.right}</button>` : ""}`;
+  </article>${reply ? `<button class="replyrow" data-toast="${esc(reply.text)}"><span class="slot">${avatar({ avatar: reply.avatar, initial: (reply.author || "回").slice(0, 1) }, "md")}</span><span style="flex:1">${esc(reply.author)} 已回复</span>${ico.right}</button>` : ""}`;
 }
 function feed() {
   return posts.filter((p) => state.tab === "forYou" ? p.feed !== "following" : p.feed !== "forYou").map(postHtml).join("");
@@ -285,7 +313,7 @@ function render() {
         <button class="${state.tab === "forYou" ? "on" : ""}" data-tab="forYou"><span class="label">为你推荐 ${ico.chev}</span></button>
         <button class="${state.tab === "following" ? "on" : ""}" data-tab="following">正在关注</button>
         <button class="plus" data-toast="列表已在这台页面演示里固定" aria-label="新建列表">${ico.plus}</button>
-      </div><div class="sync">${esc(synced)}</div>${feed()}<div class="pad"></div>`;
+      </div>${feed()}<div class="pad"></div>`;
   } else if (state.view === "search") {
     html = `<div class="search"><button data-view="home">${ico.back}</button><input id="q" placeholder="搜索" value="${state.q || ""}"></div>
       <div class="view"><h2 style="padding:12px 16px;margin:0">当前趋势</h2>

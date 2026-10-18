@@ -2,6 +2,39 @@
   "updated": "2026-10-18",
   "posts": [
     {
+      "id": "2111360655467127171",
+      "date": "2026-10-17",
+      "type": "post",
+      "title": "",
+      "time": "1天",
+      "content": "这位朋友做了很好的补充。建个 GitHub 仓库定期做项目版本更新，目的是让 Google 认定你是个专业性强的活站。\n\n这事现在就可以让你的 bot 做。\n\n后两项对于一波流网站成本太高，要花的精力比常规外链多得多，更适合品牌站。\n\n而且像 arXiv 这种预发表平台，上面的垃圾论文数量，这几年在 AI 加持下也是指数级增长，给的链接还是 nofollow，你说传递的权重有多高我是不信的，能发高校网站、正规期刊另说。\n\n对我们新手来说，方法没有 low 与不 low 之分，只有见不见效、ROI 如何。",
+      "author": "范师傅",
+      "handle": "FanShifu",
+      "avatar": "avatars/fan.jpg",
+      "link": "https://x.com/FanShifu/status/2111360655467127171",
+      "notes": "",
+      "verified": true,
+      "preview": 3,
+      "replies": 1,
+      "reposts": 1,
+      "likes": 14,
+      "views": "2.1K",
+      "quote": {
+        "author": "爱出海",
+        "handle": "ai_chuhai",
+        "avatar": "avatars/hai.jpg",
+        "verified": true,
+        "time": "1天",
+        "text": "我教别人AI发外链是：做一个日更的Github仓库，about那以及内容里带上你的网站锚文本；各种预印本的地方去出论文，外链与IP一起做；亚马逊以及D4D去出书。这年头以前不会写工具，用AI现在开始学会SPAM了，觉得是条路子，不觉得方法很LOW吗？"
+      },
+      "reply": {
+        "author": "晚晚",
+        "handle": "An_yhl",
+        "avatar": "avatars/wan.jpg",
+        "text": "仓库更新好办，别最后全是 bot 在改 README 就行。"
+      }
+    },
+    {
       "id": "2026-10-18-self-reply",
       "date": "2026-10-18",
       "type": "tip",
